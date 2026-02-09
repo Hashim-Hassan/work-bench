@@ -1,0 +1,28 @@
+name: Test Tasks with Multiple Agents
+
+on:
+  pull_request:
+    paths:
+      - "tasks/**"
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+  packages: write
+  actions: read
+  issues: read
+  id-token: write
+
+jobs:
+  test-tasks:
+    uses: abundant-ai/task-workflows/.github/workflows/test-tasks.yaml@main
+    with:
+      repository: ${{ github.repository }}
+      pr_number: ${{ github.event.pull_request.number }}
+      ref: refs/pull/${{ github.event.pull_request.number }}/head
+      tasks_path: "tasks"
+      enable_image_push: true
+      runner: "blacksmith-4vcpu-ubuntu-2404"
+    secrets: inherit
